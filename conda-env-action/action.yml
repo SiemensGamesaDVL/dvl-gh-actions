@@ -67,5 +67,6 @@ runs:
       run: |
         conda activate ${{ inputs.dvlpy-environment }}
         mamba install pytest pytest-cov
-        python -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} tests |& tee pytest-coverage.txt
+        python -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} tests 2>&1 > pytest-coverage.txt
+        cat pytest-coverage.txt
       shell: bash -l {0}
