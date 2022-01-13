@@ -59,14 +59,18 @@ runs:
     - name: Install package
       if: ${{ inputs.install-package }}
       run: |
+        echo "::group::Install package into environment"
         conda activate ${{ inputs.dvlpy-environment }}
         python -m pip install .
+        echo "::endgroup::"
       shell: bash -l {0}
     - name: Run tests
       if: ${{ inputs.run-tests }}
       run: |
+        echo "::group::Install test dependencies in environment"
         conda activate ${{ inputs.dvlpy-environment }}
         mamba install pytest pytest-cov
+        echo "::endgroup::"
         python -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} tests 2>&1 > pytest-coverage.txt
         cat pytest-coverage.txt
       shell: bash -l {0}
