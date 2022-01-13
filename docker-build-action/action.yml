@@ -1,0 +1,44 @@
+name: 'Build docker images'
+
+description: 'Build, tag, and deploy (from master branch) the latest docker image'
+
+
+inputs:
+  login-server:
+    description: 'Login URL for the Docker container registry'
+    required: true
+  username:
+    description: 'Username for authenticating with Docker container registry'
+    required: true
+  password:
+    description: 'Password for authenticating with Docker container registry'
+    required: true
+  image-name:
+    description: 'Name of the image being built'
+    required: true
+  push-image:
+    description: 'Push image to registry (for main branch updates)'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Docker BuildX
+      uses: docker/setup-buildx-action@v1
+    - name: Login to ACR
+      uses: docker/docker-login@v1
+      with:
+        login-server: ${{ inputs.login-server }}
+        username: ${{ inputs.username }}
+        password: ${{ inputs.password }}
+    - name: Generate unique build tag
+      id: version_tag
+      run: |
+        echo "::set-output name=sha_short::$(git describe --always --tags)"
+    - name: Build/push docker image
+      uses: docker/build-push-action@v2
+      with:
+        push: ${{ inputs.push-image }}
+        tags: |
+          ${{ inputs.login-server }}/${{ inputs.image-name }}:latest
+          ${{ inputs.login-server }}/${{ inputs.image-name }}:${{ steps.version_tag.outputs.sha_short }}
