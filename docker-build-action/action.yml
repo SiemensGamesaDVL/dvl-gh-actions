@@ -35,6 +35,7 @@ runs:
       id: version_tag
       run: |
         echo "::set-output name=sha_short::$(git describe --always --tags)"
+      shell: bash
     - name: Build/push docker image
       uses: docker/build-push-action@v2
       with:
