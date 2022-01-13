@@ -1,0 +1,71 @@
+name: 'Setup Python environment'
+
+description: 'A thin wrapper around setup-miniconda to setup python environments.'
+
+
+inputs:
+  exec-shell:
+    description: 'Name of the execution shell'
+    default: 'bash -l {0}'
+  dvlpy-environment:
+    description: 'Name of the dvlpy environment'
+    default: 'dvlpy'
+  environment-file:
+    description: 'Environment file used to install dependencies'
+    required: true
+  cache-number:
+    description: 'Cache number for caching artifacts'
+    default: 0
+  python-version:
+    description: 'Python version used'
+    default: '3.10'
+  install-package:
+    description: 'Install package into environment'
+    default: true
+  run-tests:
+    description: 'Run unit tests for this package'
+    default: true
+  package-variant:
+    description: 'Variant of package to install'
+    default: '[dev]'
+  pycov-module:
+    description: 'Modules for which coverage reporting is generated'
+    default: 'dvl'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache conda environment
+      uses: actions/cache@v2
+      env:
+        CACHE_NUMBER: ${{ inputs.cache-number }}
+      with:
+        path: ~/conda_pkgs_dir
+        key:
+          ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles(inputs.environment-file) }}
+    - name: Setup python environment
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: ${{ inputs.python-version }}
+        miniforge-variant: Mambaforge
+        miniforge-version:  latest
+        use-mamba: true
+        mamba-version: "*"
+        activate-environment: ${{ inputs.dvlpy-environment }}
+        environment-file: ${{ inputs.environment-file }}
+        channels: conda-forge
+        channel-priority: strict
+        use-only-tar-bz2: true
+    - name: Install package
+      if: ${{ inputs.install-package }}
+      run: |
+        conda activate ${{ inputs.dvlpy-environment }}
+        python -m pip install .${{ inputs.package-variant }}
+      shell: ${{ inputs.exec_shell }}
+    - name: Run tests
+      if: ${{ inputs.install-package && inputs.run-tests }}
+      run: |
+        conda activate ${{ inputs.dvlpy-environment }}
+        mamba install pytest pytest-cov
+        python -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} tests |& tee pytest-coverage.txt
+      shell: ${{ inputs.exec_shell }}
