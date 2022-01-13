@@ -61,11 +61,11 @@ runs:
       run: |
         conda activate ${{ inputs.dvlpy-environment }}
         python -m pip install .${{ inputs.package-variant }}
-      shell: ${{ inputs.exec_shell }}
+      shell: ${{ inputs.exec-shell }}
     - name: Run tests
       if: ${{ inputs.install-package && inputs.run-tests }}
       run: |
         conda activate ${{ inputs.dvlpy-environment }}
         mamba install pytest pytest-cov
         python -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} tests |& tee pytest-coverage.txt
-      shell: ${{ inputs.exec_shell }}
+      shell: ${{ inputs.exec-shell }}
