@@ -63,7 +63,7 @@ runs:
         python -m pip install .
       shell: bash -l {0}
     - name: Run tests
-      if: ${{ inputs.install-package && inputs.run-tests }}
+      if: ${{ inputs.run-tests }}
       run: |
         conda activate ${{ inputs.dvlpy-environment }}
         mamba install pytest pytest-cov
