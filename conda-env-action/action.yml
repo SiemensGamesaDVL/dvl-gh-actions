@@ -106,7 +106,7 @@ runs:
         touch build/html/.nojekyll
       shell: bash -l {0}
     - name: Deploy docs
-      if: github.event_name == 'push' && ${{ inputs.build-docs }}
+      if: ${{ (github.event_name == 'push') && inputs.build-docs }}
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
