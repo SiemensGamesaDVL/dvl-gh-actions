@@ -1,6 +1,6 @@
-name: 'Setup Python environment'
+name: 'DVLpy python package testing enironment'
 
-description: 'A thin wrapper around setup-miniconda to setup python environments.'
+description: 'A wrapper to handle default steps in building DVLpy packages.'
 
 
 inputs:
@@ -31,6 +31,9 @@ inputs:
   pycov-module:
     description: 'Modules for which coverage reporting is generated'
     default: 'dvl'
+  package-local-deps:
+    description: 'Locally cloned dependencies separated by semicolon'
+    default: ''
   package-path:
     description: 'Path to the package directory'
     default: '.'
@@ -79,8 +82,15 @@ runs:
       run: |
         echo "::group::Install package into environment"
         conda activate ${{ inputs.dvlpy-environment }}
+        pkg_deps=${{ inputs.package-local-deps }}
+        pkg_dep_list=($(echo ${pkg_deps} | tr ';' ' '))
+        for pkg in "${pkg_dep_list[@]}" ; do
+          pushd $pkg
+          python -m pip install .${{ inputs.package-variant }}
+          popd
+        done
         cd ${{ inputs.package-path }}
-        python -m pip install .
+        python -m pip install .${{ inputs.package-variant }}
         echo "::endgroup::"
       shell: bash -l {0}
     - name: Run tests
@@ -99,9 +109,9 @@ runs:
       with:
         pytest-coverage-path: ${{ inputs.package-path }}/pytest-coverage.txt
         junitxml-path: ${{ inputs.package-path }}/pytest.xml
-        title: dvl-core test coverage
-        badge-title: dvlcore
-        junitxml-title: dvl-core coverage summary
+        title: Test coverage
+        badge-title: dvlpy
+        junitxml-title: Coverage summary
     - name: Run Sphinx
       if: inputs.build-docs == 'true'
       run: |
