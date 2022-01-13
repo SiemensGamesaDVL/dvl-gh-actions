@@ -28,7 +28,7 @@ runs:
     - name: Login to ACR
       uses: docker/login-action@v1
       with:
-        login-server: ${{ inputs.login-server }}
+        registry: ${{ inputs.login-server }}
         username: ${{ inputs.username }}
         password: ${{ inputs.password }}
     - name: Generate unique build tag
