@@ -40,6 +40,9 @@ inputs:
   build-docs:
     description: 'Build Sphinx documentation'
     default: false
+  docs-deploy-token:
+    description: 'Documentation deployment token'
+    default: ''
 
 runs:
   using: "composite"
@@ -109,7 +112,7 @@ runs:
       if: ${{ (github.event_name == 'push') && inputs.build-docs }}
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.docs-deploy-token }}
         BRANCH: gh-pages
         FOLDER: ${{ inputs.package-path }}/docs/build/html
         SINGLE_COMMIT: true
