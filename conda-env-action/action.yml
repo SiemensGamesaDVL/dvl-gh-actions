@@ -37,8 +37,14 @@ inputs:
   tests-path:
     description: 'Path to the unit test directory'
     default: 'tests'
+  publish-test-coverage:
+    description: 'Publish test coverage details'
+    default: false
   build-docs:
     description: 'Build Sphinx documentation'
+    default: false
+  publish-docs:
+    description: 'Publish docs to gh-pages'
     default: false
   docs-deploy-token:
     description: 'Documentation deployment token'
@@ -88,7 +94,7 @@ runs:
         python -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} ${{ inputs.tests-path }} | tee pytest-coverage.txt
       shell: bash -l {0}
     - name: Unit test coverage report
-      if: inputs.run-tests == 'true'
+      if: inputs.run-tests == 'true' && inputs.publish-test-coverage == 'true'
       uses: MishaKav/pytest-coverage-comment@main
       with:
         pytest-coverage-path: ${{ inputs.package-path }}/pytest-coverage.txt
@@ -108,7 +114,7 @@ runs:
         touch build/html/.nojekyll
       shell: bash -l {0}
     - name: Deploy docs
-      if: (github.event_name == 'push') && (inputs.build-docs == 'true')
+      if: inputs.publish-docs == 'true'
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         GITHUB_TOKEN: ${{ inputs.docs-deploy-token }}
