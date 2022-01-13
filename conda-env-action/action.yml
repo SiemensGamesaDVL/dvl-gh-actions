@@ -31,6 +31,15 @@ inputs:
   pycov-module:
     description: 'Modules for which coverage reporting is generated'
     default: 'dvl'
+  package-path:
+    description: 'Path to the package directory'
+    default: '.'
+  tests-path:
+    description: 'Path to the unit test directory'
+    default: 'tests'
+  build-docs:
+    description: 'Build Sphinx documentation'
+    default: false
 
 runs:
   using: "composite"
@@ -61,6 +70,7 @@ runs:
       run: |
         echo "::group::Install package into environment"
         conda activate ${{ inputs.dvlpy-environment }}
+        cd ${{ inputs.package-path }}
         python -m pip install .
         echo "::endgroup::"
       shell: bash -l {0}
@@ -70,7 +80,36 @@ runs:
         echo "::group::Install test dependencies in environment"
         conda activate ${{ inputs.dvlpy-environment }}
         mamba install pytest pytest-cov
+        cd ${{ inputs.package-path }}
         echo "::endgroup::"
-        python -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} tests 2>&1 > pytest-coverage.txt
+        python -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} ${{ inputs.tests-path }} | tee pytest-coverage.txt
         cat pytest-coverage.txt
       shell: bash -l {0}
+    - name: Unit test coverage report
+      if: ${{ inputs.run-tests }}
+      uses: MishaKav/pytest-coverage-comment@main
+      with:
+        pytest-coverage-path: ${{ inputs.package-path }}/pytest-coverage.txt
+        junitxml-path: ${{ inputs.package-path }}/pytest.xml
+        title: dvl-core test coverage
+        badge-title: dvlcore
+        junitxml-title: dvl-core coverage summary
+    - name: Run Sphinx
+      if: ${{ inputs.build-docs }}
+      run: |
+        echo "::group::Install sphinx dependencies"
+        conda activate dvlpy
+        mamba install sphinx sphinx_rtd_theme
+        cd ${{ inputs.package-path }}/docs/
+        echo "::endgroup::"
+        make html
+        touch build/html/.nojekyll
+      shell: bash -l {0}
+    - name: Deploy docs
+      if: github.event_name == 'push' && ${{ inputs.build-docs }}
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: ${{ inputs.package-path }}/docs/build/html
+        SINGLE_COMMIT: true
