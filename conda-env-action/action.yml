@@ -69,7 +69,7 @@ runs:
         channel-priority: strict
         use-only-tar-bz2: true
     - name: Install package
-      if: inputs.install-package
+      if: inputs.install-package  == 'true'
       run: |
         echo "::group::Install package into environment"
         conda activate ${{ inputs.dvlpy-environment }}
@@ -78,7 +78,7 @@ runs:
         echo "::endgroup::"
       shell: bash -l {0}
     - name: Run tests
-      if: inputs.run-tests
+      if: inputs.run-tests == 'true'
       run: |
         echo "::group::Install test dependencies in environment"
         conda activate ${{ inputs.dvlpy-environment }}
@@ -88,7 +88,7 @@ runs:
         python -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} ${{ inputs.tests-path }} | tee pytest-coverage.txt
       shell: bash -l {0}
     - name: Unit test coverage report
-      if: inputs.run-tests
+      if: inputs.run-tests == 'true'
       uses: MishaKav/pytest-coverage-comment@main
       with:
         pytest-coverage-path: ${{ inputs.package-path }}/pytest-coverage.txt
@@ -97,7 +97,7 @@ runs:
         badge-title: dvlcore
         junitxml-title: dvl-core coverage summary
     - name: Run Sphinx
-      if: inputs.build-docs
+      if: inputs.build-docs == 'true'
       run: |
         echo "::group::Install sphinx dependencies"
         conda activate dvlpy
@@ -108,7 +108,7 @@ runs:
         touch build/html/.nojekyll
       shell: bash -l {0}
     - name: Deploy docs
-      if: (github.event_name == 'push') && inputs.build-docs
+      if: (github.event_name == 'push') && (inputs.build-docs == 'true')
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         GITHUB_TOKEN: ${{ inputs.docs-deploy-token }}
