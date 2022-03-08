@@ -39,7 +39,7 @@ runs:
         python -m pylint ${{ inputs.package-dirs }}
         echo "::endgroup::"
     - name: isort
-      if: inputs.run-isort == 'true'
+      if: always() && inputs.run-isort == 'true'
       shell: bash -l {0}
       run: |
         echo "::group::isort"
@@ -47,7 +47,7 @@ runs:
         python -m isort --check-only --diff ${{ inputs.package-dirs }}
         echo "::endgroup::"
     - name: Black formatter
-      if: inputs.run-black == 'true'
+      if: always() && inputs.run-black == 'true'
       shell: bash -l {0}
       run: |
         echo "::group::black"
