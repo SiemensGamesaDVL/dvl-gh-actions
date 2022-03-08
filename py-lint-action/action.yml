@@ -42,7 +42,7 @@ runs:
       run: |
         echo "::group::isort"
         echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/isort.json"
-        python -m isort --check-only --diff --color ${{ inputs.package-dirs }} || echo "Error: imports incorrectly sorted or formatted"
+        python -m isort --check-only --diff ${{ inputs.package-dirs }} || echo "Error: imports incorrectly sorted or formatted"
         echo "::endgroup::"
     - name: Black formatter
       if: inputs.run-black == 'true'
