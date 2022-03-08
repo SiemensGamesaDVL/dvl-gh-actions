@@ -19,7 +19,9 @@ inputs:
   package-dirs:
     description: 'Directories to check'
     required: true
-
+  extra-dirs:
+    description: 'Other directories to reformat'
+    default: " "
 
 runs:
   using: "composite"
@@ -44,7 +46,7 @@ runs:
       run: |
         echo "::group::isort"
         echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/isort.json"
-        python -m isort --check-only --diff ${{ inputs.package-dirs }}
+        python -m isort --check-only --diff ${{ inputs.package-dirs }} ${{ inputs.extra-dirs }}
         echo "::endgroup::"
     - name: Black formatter
       if: inputs.run-black == 'true'
@@ -52,5 +54,5 @@ runs:
       run: |
         echo "::group::black"
         echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/black.json"
-        python -m black --check --diff --color ${{ inputs.package-dirs }}
+        python -m black --check --diff --color ${{ inputs.package-dirs }} ${{ inputs.extra-dirs }}
         echo "::endgroup::"
