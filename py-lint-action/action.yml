@@ -28,27 +28,27 @@ runs:
       shell: bash -l {0}
       run: |
         python -m pip install black pylint isort
-    # - name: Pylint
-    #   if: inputs.run-pylint == 'true'
-    #   shell: bash -l {0}
-    #   run: |
-    #     echo "::group::pylint"
-    #     echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/pylint.json"
-    #     python -m pylint ${{ inputs.package-dirs }}
-    #     echo "::remove-matcher owner=pylint-error::"
-    #     echo "::remove-matcher owner=pylint-warning::"
-    #     echo "::endgroup::"
+    - name: Pylint
+      if: inputs.run-pylint == 'true'
+      shell: bash -l {0}
+      run: |
+        echo "::group::pylint"
+        echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/pylint.json"
+        python -m pylint ${{ inputs.package-dirs }}
+        echo "::remove-matcher owner=pylint-error::"
+        echo "::remove-matcher owner=pylint-warning::"
+        echo "::endgroup::"
     - name: isort
       if: inputs.run-isort == 'true'
       shell: bash -l {0}
       run: |
         echo "::group::isort"
-        python -m isort --check-only ${{ inputs.package-dirs }}
+        python -m isort --check-only --diff --color ${{ inputs.package-dirs }}
         echo "::endgroup::"
     - name: Black formatter
       if: inputs.run-black == 'true'
       shell: bash -l {0}
       run: |
         echo "::group::black"
-        python -m black --check ${{ inputs.package-dirs }}
+        python -m black --check --diff --color ${{ inputs.package-dirs }}
         echo "::endgroup::"
