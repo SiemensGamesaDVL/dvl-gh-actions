@@ -1,7 +1,7 @@
 {
   "problemMatcher": [
     {
-      "owner": "pylint-error"
+      "owner": "pylint-error",
       "severity": "error",
       "pattern": [
         {
@@ -15,7 +15,7 @@
       ]
     },
     {
-      "owner": "pylint-warning"
+      "owner": "pylint-warning",
       "severity": "warning",
       "pattern": [
         {
