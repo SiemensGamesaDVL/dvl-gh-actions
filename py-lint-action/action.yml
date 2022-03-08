@@ -28,16 +28,16 @@ runs:
       shell: bash -l {0}
       run: |
         python -m pip install black pylint isort
-    - name: Pylint
-      if: inputs.run-pylint == 'true'
-      shell: bash -l {0}
-      run: |
-        echo "::group::pylint"
-        echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/pylint.json"
-        python -m pylint ${{ inputs.package-dirs }}
-        echo "::remove-matcher owner=pylint-error::"
-        echo "::remove-matcher owner=pylint-warning::"
-        echo "::group::pylint"
+    # - name: Pylint
+    #   if: inputs.run-pylint == 'true'
+    #   shell: bash -l {0}
+    #   run: |
+    #     echo "::group::pylint"
+    #     echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/pylint.json"
+    #     python -m pylint ${{ inputs.package-dirs }}
+    #     echo "::remove-matcher owner=pylint-error::"
+    #     echo "::remove-matcher owner=pylint-warning::"
+    #     echo "::endgroup::"
     - name: isort
       if: inputs.run-isort == 'true'
       shell: bash -l {0}
