@@ -36,17 +36,19 @@ runs:
         echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/pylint.json"
         python -m pylint ${{ inputs.package-dirs }}
         echo "::endgroup::"
-    # - name: isort
-    #   if: inputs.run-isort == 'true'
-    #   shell: bash -l {0}
-    #   run: |
-    #     echo "::group::isort"
-    #     python -m isort --check-only --diff --color ${{ inputs.package-dirs }}
-    #     echo "::endgroup::"
-    # - name: Black formatter
-    #   if: inputs.run-black == 'true'
-    #   shell: bash -l {0}
-    #   run: |
-    #     echo "::group::black"
-    #     python -m black --check --diff --color ${{ inputs.package-dirs }}
-    #     echo "::endgroup::"
+    - name: isort
+      if: inputs.run-isort == 'true'
+      shell: bash -l {0}
+      run: |
+        echo "::group::isort"
+        echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/isort.json"
+        python -m isort --check-only --diff --color ${{ inputs.package-dirs }}
+        echo "::endgroup::"
+    - name: Black formatter
+      if: inputs.run-black == 'true'
+      shell: bash -l {0}
+      run: |
+        echo "::group::black"
+        echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/black.json"
+        python -m black --check --diff --color ${{ inputs.package-dirs }}
+        echo "::endgroup::"
