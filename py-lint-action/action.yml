@@ -1,0 +1,53 @@
+name: 'DVLpy python formatter/linter action'
+
+description: 'Handle common formatting and linter for DVLpy packages.'
+
+
+inputs:
+  exec-shell:
+    description: 'Name of execution shell'
+    default: 'bash -l {0}'
+  run-black:
+    description: 'Run black formatter'
+    default: true
+  run-pylint:
+    description: 'Run pylint'
+    default: true
+  run-isort:
+    description: 'Run isort'
+    default: true
+  package-dirs:
+    description: 'Directories to check'
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install linter packages
+      run: |
+        python -m pip install black pylint isort
+    - name: Pylint
+      if: inputs.run-pylint == 'true'
+      shell: bash -l {0}
+      run: |
+        echo "::group::pylint"
+        echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/pylint.json"
+        python -m pylint ${{ inputs.package-dirs }}
+        echo "::remove-matcher owner=pylint-error::"
+        echo "::remove-matcher owner=pylint-warning::"
+        echo "::group::pylint"
+    - name: isort
+      if: inputs.run-isort == 'true'
+      shell: bash -l {0}
+      run: |
+        echo "::group::isort"
+        python -m isort --check-only ${{ inputs.package-dirs }}
+        echo "::endgroup::"
+    - name: Black formatter
+      if: inputs.run-black == 'true'
+      shell: bash -l {0}
+      run: |
+        echo "::group::black"
+        python -m black --check ${{ inputs.package-dirs }}
+        echo "::endgroup::"
