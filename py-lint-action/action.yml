@@ -16,6 +16,9 @@ inputs:
   run-isort:
     description: 'Run isort'
     default: true
+  working-directory:
+    description: 'Base working directory for checks'
+    default: "."
   package-dirs:
     description: 'Directories to check'
     required: true
@@ -38,6 +41,7 @@ runs:
       run: |
         echo "::group::pylint"
         echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/pylint.json"
+        cd ${{ inputs.working-directory }}
         python -m pylint ${{ inputs.package-dirs }}
         echo "::endgroup::"
     - name: isort
@@ -46,6 +50,7 @@ runs:
       run: |
         echo "::group::isort"
         echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/isort.json"
+        cd ${{ inputs.working-directory }}
         python -m isort --check-only --diff ${{ inputs.package-dirs }} ${{ inputs.extra-dirs }}
         echo "::endgroup::"
     - name: Black formatter
@@ -54,5 +59,6 @@ runs:
       run: |
         echo "::group::black"
         echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/black.json"
+        cd ${{ inputs.working-directory }}
         python -m black --check --diff --color ${{ inputs.package-dirs }} ${{ inputs.extra-dirs }}
         echo "::endgroup::"
