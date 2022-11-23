@@ -93,6 +93,22 @@ runs:
         python -m pip install .${{ inputs.package-variant }}
         echo "::endgroup::"
       shell: bash -l {0}
+    - name: Install requirements only
+      if: inputs.install-requirements-only == 'true'
+      run: |
+        echo "::group::Install package into environment"
+        conda activate ${{ inputs.dvlpy-environment }}
+        pkg_deps=${{ inputs.package-local-deps }}
+        pkg_dep_list=($(echo ${pkg_deps} | tr ';' ' '))
+        for pkg in "${pkg_dep_list[@]}" ; do
+          pushd $pkg
+          python -m pip install .${{ inputs.package-variant }}
+          popd
+        done
+        cd ${{ inputs.package-path }}
+        python -m pip install -r requirements.txt
+        echo "::endgroup::"
+      shell: bash -l {0}
     - name: Run tests
       if: inputs.run-tests == 'true'
       run: |
