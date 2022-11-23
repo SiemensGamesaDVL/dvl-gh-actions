@@ -22,6 +22,9 @@ inputs:
   install-package:
     description: 'Install package into environment'
     default: true
+  install-requirements-only:
+    description: 'Install package requirements only into environment'
+    default: false
   run-tests:
     description: 'Run unit tests for this package'
     default: true
