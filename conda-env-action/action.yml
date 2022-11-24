@@ -46,6 +46,9 @@ inputs:
   publish-test-coverage:
     description: 'Publish test coverage details'
     default: false
+  publish-test-coverage-badge:
+    decription: 'Badge title for test coverage'
+    default: 'dvlpy'
   build-docs:
     description: 'Build Sphinx documentation'
     default: false
@@ -129,7 +132,7 @@ runs:
         pytest-coverage-path: ${{ inputs.package-path }}/pytest-coverage.txt
         junitxml-path: ${{ inputs.package-path }}/pytest.xml
         title: Test coverage
-        badge-title: dvlpy
+        badge-title: ${{ inputs.publish-test-coverage-badge }}
         junitxml-title: Coverage summary
     - name: Run Sphinx
       if: inputs.build-docs == 'true'
