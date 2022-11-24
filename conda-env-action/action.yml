@@ -60,7 +60,7 @@ runs:
   using: "composite"
   steps:
     - name: Cache conda environment
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       env:
         CACHE_NUMBER: ${{ inputs.cache-number }}
       with:
@@ -144,7 +144,7 @@ runs:
       shell: bash -l {0}
     - name: Deploy docs
       if: inputs.publish-docs == 'true'
-      uses: JamesIves/github-pages-deploy-action@releases/v3
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
         GITHUB_TOKEN: ${{ inputs.docs-deploy-token }}
         BRANCH: gh-pages
