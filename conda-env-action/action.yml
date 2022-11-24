@@ -124,7 +124,7 @@ runs:
       shell: bash -l {0}
     - name: Unit test coverage report
       if: inputs.run-tests == 'true' && inputs.publish-test-coverage == 'true'
-      uses: MishaKav/pytest-coverage-comment@main
+      uses: MishaKav/pytest-coverage-comment@v1.1.37
       with:
         pytest-coverage-path: ${{ inputs.package-path }}/pytest-coverage.txt
         junitxml-path: ${{ inputs.package-path }}/pytest.xml
