@@ -145,12 +145,6 @@ runs:
         make html
         touch build/html/.nojekyll
       shell: bash -l {0}
-    - name: Configure git to trust the workspace
-      run:
-        if ! [ -d .git ]; then
-          git init
-        fi
-      shell: bash -l {0}
     - name: Deploy docs
       if: inputs.publish-docs == 'true'
       uses: JamesIves/github-pages-deploy-action@v4
