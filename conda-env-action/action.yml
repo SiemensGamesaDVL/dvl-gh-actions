@@ -145,9 +145,11 @@ runs:
         make html
         touch build/html/.nojekyll
       shell: bash -l {0}
-    - name: Configure git to trust the workspace despite the different owner
+    - name: Configure git to trust the workspace
       run:
-        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        if ! [ -d .git ]; then
+          git init
+        fi
       shell: bash -l {0}
     - name: Deploy docs
       if: inputs.publish-docs == 'true'
