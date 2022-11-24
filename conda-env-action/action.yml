@@ -148,6 +148,7 @@ runs:
     - name: Configure git to trust the workspace despite the different owner
       run:
         git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      shell: bash -l {0}
     - name: Deploy docs
       if: inputs.publish-docs == 'true'
       uses: JamesIves/github-pages-deploy-action@v4
