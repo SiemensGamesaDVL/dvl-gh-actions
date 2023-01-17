@@ -139,7 +139,7 @@ runs:
         mamba install sphinx sphinx_rtd_theme
         cd ${{ inputs.package-path }}/docs/
         echo "::endgroup::"
-        sphinx-apidoc -o api/ ../dvl
+        sphinx-apidoc -o source/api/ --implicit-namespaces ../dvl
         make html
         touch build/html/.nojekyll
       shell: bash -l {0}
