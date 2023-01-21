@@ -137,7 +137,7 @@ runs:
         sed -i '/<!-- Pytest Coverage Comment:Begin -->/,/<!-- Pytest Coverage Comment:End -->/c\<!-- Pytest Coverage Comment:Begin -->\n\${{ steps.coverageComment.outputs.coverageHtml }}\n<!-- Pytest Coverage Comment:End -->' ./README.md
       shell: bash -l {0}
     - name: Commit & push changes to readme
-      if: inputs.run-tests == 'true' && inputs.publish-test-coverage == 'true'
+      if: inputs.run-tests == 'true' && inputs.publish-test-coverage == 'true' && github.event_name != 'workflow_dispatch'
       uses: actions-js/push@master
       with:
         message: Update coverage on Readme
