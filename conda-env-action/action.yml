@@ -125,6 +125,7 @@ runs:
     - name: Unit test coverage report
       if: inputs.run-tests == 'true' && inputs.publish-test-coverage == 'true'
       uses: MishaKav/pytest-coverage-comment@v1.1.37
+      id: coverageComment
       with:
         pytest-coverage-path: ${{ inputs.package-path }}/pytest-coverage.txt
         junitxml-path: ${{ inputs.package-path }}/pytest.xml
@@ -144,7 +145,7 @@ runs:
         git config --global user.email 'github-actions.github.com'
         git add README.md
         git commit -m "Automated readme update"
-        git push origin main --force
+        git push origin main
       shell: bash -l {0}
     - name: Run Sphinx
       if: inputs.build-docs == 'true'
