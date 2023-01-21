@@ -149,7 +149,7 @@ runs:
         git config --global user.email 'github-actions.github.com'
         git add README.md
         git commit -m "Automated readme update"
-        git push origin main
+        git push origin main --force
       shell: bash -l {0}
     - name: Run Sphinx
       if: inputs.build-docs == 'true'
