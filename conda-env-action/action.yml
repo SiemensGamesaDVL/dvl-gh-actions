@@ -142,7 +142,6 @@ runs:
       with:
         message: Update coverage on Readme
         github_token: ${{ inputs.docs-deploy-token }}
-      shell: bash -l {0}
     - name: Run Sphinx
       if: inputs.build-docs == 'true'
       run: |
