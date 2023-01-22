@@ -123,8 +123,7 @@ runs:
         pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} ${{ inputs.tests-path }} | tee pytest-coverage.txt
         coverage report
         mamba install coverage-badge
-        mkdir coverage
-        coverage-badge -o coverage/coverage.svg -f
+        coverage-badge -o coverage.svg -f
       shell: bash -l {0}
     - name: Unit test coverage report
       if: inputs.run-tests == 'true' && inputs.publish-test-coverage == 'true'
@@ -147,6 +146,7 @@ runs:
         sphinx-apidoc -o source/api/ --implicit-namespaces ../dvl
         make html
         touch build/html/.nojekyll
+        mv coverage.svg build/html
       shell: bash -l {0}
     - name: Deploy docs to Github Pages
       if: inputs.publish-docs == 'true'
