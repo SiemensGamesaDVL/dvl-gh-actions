@@ -117,13 +117,13 @@ runs:
       run: |
         echo "::group::Install test dependencies in environment"
         conda activate ${{ inputs.dvlpy-environment }}
-        mamba install pytest pytest-cov coveralls
+        mamba install pytest pytest-cov
         cd ${{ inputs.package-path }}
         echo "::endgroup::"
         coverage run -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} ${{ inputs.tests-path }} | tee pytest-coverage.txt
-        coveralls --service=github 
-      env:
-        GITHUB_TOKEN: ${{ inputs.docs-deploy-token }}
+        mamba install converage-badge
+        mkdir coverage
+        coverage-badge -of coverage/coverage.svg
       shell: bash -l {0}
     - name: Unit test coverage report
       if: inputs.run-tests == 'true' && inputs.publish-test-coverage == 'true'
@@ -147,11 +147,15 @@ runs:
         make html
         touch build/html/.nojekyll
       shell: bash -l {0}
-    - name: Deploy docs
+    - name: Deploy docs to Github Pages
       if: inputs.publish-docs == 'true'
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         token: ${{ inputs.docs-deploy-token }}
-        branch: gh-pages
         folder: ${{ inputs.package-path }}/docs/build/html
         single-commit: true
+    - name: Publish coverage report to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        token: ${{ inputs.docs-deploy-token }}
+        folder: ${{ inputs.package-path }}/coverage
