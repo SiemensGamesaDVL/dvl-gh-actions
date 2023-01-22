@@ -123,7 +123,7 @@ runs:
         coverage run -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} ${{ inputs.tests-path }} | tee pytest-coverage.txt
         mamba install coverage-badge
         mkdir coverage
-        coverage-badge -of coverage/coverage.svg
+        coverage-badge -o coverage/coverage.svg -f
       shell: bash -l {0}
     - name: Unit test coverage report
       if: inputs.run-tests == 'true' && inputs.publish-test-coverage == 'true'
