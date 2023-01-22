@@ -146,7 +146,7 @@ runs:
         sphinx-apidoc -o source/api/ --implicit-namespaces ../dvl
         make html
         touch build/html/.nojekyll
-        mv coverage.svg build/html
+        mv ../coverage.svg build/html
       shell: bash -l {0}
     - name: Deploy docs to Github Pages
       if: inputs.publish-docs == 'true'
