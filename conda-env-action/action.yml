@@ -120,7 +120,7 @@ runs:
         mamba install pytest pytest-cov
         cd ${{ inputs.package-path }}
         echo "::endgroup::"
-        coverage run -m pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} ${{ inputs.tests-path }} | tee pytest-coverage.txt
+        pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} ${{ inputs.tests-path }} | tee pytest-coverage.txt
         coverage report
         mamba install coverage-badge
         mkdir coverage
