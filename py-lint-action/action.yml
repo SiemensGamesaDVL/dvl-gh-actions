@@ -42,7 +42,7 @@ runs:
         echo "::group::pylint"
         echo "::add-matcher::${GITHUB_ACTION_PATH}/matchers/pylint.json"
         cd ${{ inputs.working-directory }}
-        python -m pylint ${{ inputs.package-dirs }}
+        python -m pylint -d R1735 ${{ inputs.package-dirs }}
         echo "::endgroup::"
     - name: isort
       if: inputs.run-isort == 'true'
