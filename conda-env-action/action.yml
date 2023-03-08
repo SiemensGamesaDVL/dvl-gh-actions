@@ -121,7 +121,7 @@ runs:
         cd ${{ inputs.package-path }}
         echo "::endgroup::"
         pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=${{ inputs.pycov-module }} ${{ inputs.tests-path }} | tee pytest-coverage.txt
-        coverage report
+        coverage report -i
         mamba install coverage-badge
         coverage-badge -o coverage.svg -f
       shell: bash -l {0}
