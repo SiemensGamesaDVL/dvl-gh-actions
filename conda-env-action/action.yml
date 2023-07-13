@@ -141,7 +141,7 @@ runs:
         sudo apt-get update
         sudo apt-get -y install texlive-base texlive-latex-extra texlive-fonts-extra
         wget -c https://github.com/jgm/pandoc/releases/download/3.1.5/pandoc-3.1.5-1-amd64.deb
-        sudo dpkg -i pandoc-3.1.15-1-amd64.deb
+        sudo dpkg -i pandoc-3.1.5-1-amd64.deb
         echo "::endgroup::"
         echo "::group::Install sphinx dependencies"
         conda activate dvlpy
