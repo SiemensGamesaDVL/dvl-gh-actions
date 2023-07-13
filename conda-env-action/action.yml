@@ -140,7 +140,7 @@ runs:
       run: |
         echo "::group::Install sphinx dependencies"
         conda activate dvlpy
-        mamba install sphinx sphinx_rtd_theme nbsphinx
+        pip install sphinx sphinx_rtd_theme nbsphinx
         sudo apt-get install -y pandoc
         cd ${{ inputs.package-path }}/docs/
         echo "::endgroup::"
