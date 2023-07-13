@@ -141,7 +141,21 @@ runs:
         echo "::group::Install sphinx dependencies"
         conda activate dvlpy
         pip install sphinx sphinx_rtd_theme nbsphinx
-        sudo apt-get install -y pandoc
+        sudo apt-get install texlive-latex-recommended \
+          texlive-xetex \
+          texlive-luatex \
+          pandoc-citeproc \
+          texlive-latex-extra \
+          context \
+          wkhtmltopdf \
+          librsvg2-bin \
+          groff \
+          ghc \
+          nodejs \
+          libjs-mathjax \
+          libjs-katex \
+          citation-style-language-styles \
+          pandoc
         cd ${{ inputs.package-path }}/docs/
         echo "::endgroup::"
         sphinx-apidoc -o source/api/ --implicit-namespaces ../dvl
