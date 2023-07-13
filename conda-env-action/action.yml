@@ -141,6 +141,7 @@ runs:
         echo "::group::Install sphinx dependencies"
         conda activate dvlpy
         pip install sphinx sphinx_rtd_theme nbsphinx
+        sudo apt-get update
         sudo apt-get install texlive-latex-recommended \
           texlive-xetex \
           texlive-luatex \
